@@ -8,9 +8,13 @@ export const config = {
 
 // Middleware for firebase authentication
 export async function middleware(req: NextRequest) {
+    console.log(auth.currentUser);
+
     if (auth.currentUser != null) {
         return NextResponse.next();
     }
+
+    return NextResponse.redirect(new URL('/login', req.url));
 
     const provider = new GoogleAuthProvider();
     try {
