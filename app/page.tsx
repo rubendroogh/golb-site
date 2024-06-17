@@ -1,11 +1,13 @@
+import { HeaderNavigation } from '@/components/HeaderNavigation/HeaderNavigation';
 import { Welcome } from '../components/Welcome/Welcome';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
+import { BlogsHome } from '@/components/BlogsHome/BlogsHome';
 
 export default function HomePage() {
   return (
     <>
+      <HeaderNavigation />
       <Welcome />
-      <ColorSchemeToggle />
+      <BlogsHome />
     </>
   );
 }
