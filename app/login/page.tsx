@@ -22,7 +22,6 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = '/dashboard';
     } catch (error) {
       console.error(error);
     }

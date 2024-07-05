@@ -3,13 +3,15 @@
 import {
   Container,
   Group,
-  Tabs,
   Burger,
   Image,
-  rem,
+  Anchor,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import classes from './HeaderNavigation.module.css';
+import { useContext } from 'react';
+import { AuthContext } from '@/components/AuthProvider/AuthProvider';
+import { auth } from '@/firebase/clientApp';
 
 const tabs = [
   'Home',
@@ -18,12 +20,7 @@ const tabs = [
 
 export function HeaderNavigation({ logoVariant: logoVariant = "default"}) {
   const [opened, { toggle }] = useDisclosure(false);
-
-  const items = tabs.map((tab) => (
-    <Tabs.Tab value={tab} key={tab}>
-      {tab}
-    </Tabs.Tab>
-  ));
+  const loggedIn = useContext(AuthContext);
 
   const logo = logoVariant === "default" ? <Image
                                               src="/GolbLogo.gif"
@@ -46,6 +43,17 @@ export function HeaderNavigation({ logoVariant: logoVariant = "default"}) {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </Group>
       </Container>
+      
+      {loggedIn &&
+        <Container className={classes.mainSection} size="md">
+          <Group justify="space-around">
+            <Anchor onClick={() => auth.signOut()}>
+              Logout
+            </Anchor>
+          </Group>
+        </Container>
+      }
+      
       {/* <Container size="md">
         <Tabs
           defaultValue="Home"
