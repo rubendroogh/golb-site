@@ -1,5 +1,7 @@
+'use client'
+
 import Blog from '@/interfaces/Blog';
-import { Title, Container, Divider, Grid, GridCol, SimpleGrid, Skeleton, rem, Badge, Button, Card, Group, Image, Text } from '@mantine/core';
+import { Grid, Button, Card, Group, Image, Text } from '@mantine/core';
 
 export function BlogCard(props: {blog: Blog}) {
 
