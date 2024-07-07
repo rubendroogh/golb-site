@@ -1,19 +1,46 @@
 'use client'
 
+import { collection, doc, setDoc, getDocs, getDocsFromCache } from "firebase/firestore"; 
 import { AuthContext } from "@/components/AuthProvider/AuthProvider";
 import { HeaderNavigation } from "@/components/HeaderNavigation/HeaderNavigation";
-import { Badge, Button, Card, Container, Group, Title, Image, Text, Grid } from "@mantine/core";
-import { useContext } from "react";
+import { Card, Container, Title, Text, Grid } from "@mantine/core";
+import { useContext, useEffect, useState } from "react";
 
 import Login from "@/app/login/page";
+import { BlogCard } from "@/components/BlogCard/BlogCard";
+import Blog, { blogConverter } from "@/interfaces/Blog";
+import { db } from "@/firebase/clientApp";
+
+const testBlog = {
+  title: "Norway Fjord Adventures",
+  intro: "Fellas",
+  content: "With Fjord Tours you can explore more of the magical fjord landscapes with tours and activities on and around the fjords of Norway",
+  imageURL: "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png",
+  contributors: ["Golb Games"]
+} as Blog;
 
 export default function Dashboard() {
-  var loggedIn = useContext(AuthContext);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const blogsRef = collection(db, "blogs").withConverter(blogConverter);
+        // get all blogs in an array of Blog objects
+        const blogsResult = (await getDocs(blogsRef)).docs.map(doc => doc.data()) as Blog[];
+        setBlogs(blogsResult);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
   return (
     <>
       <HeaderNavigation logoVariant="compact" />
-      {!loggedIn ? (<Login />) : (<Container>
+      <Container>
           <Title order={2}>
             Welcome to the Golb Games Dashboard!
           </Title>
@@ -21,81 +48,7 @@ export default function Dashboard() {
             Here you can create, edit, or delete blogs.
           </Text>
           <Grid>
-            <Grid.Col span={6}>
-              <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Card.Section>
-                  <Image
-                    src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                    height={160}
-                    alt="Norway"
-                  />
-                </Card.Section>
-
-                <Group justify="space-between" mt="md" mb="xs">
-                  <Text fw={500}>Norway Fjord Adventures</Text>
-                  <Badge color="pink">On Sale</Badge>
-                </Group>
-
-                <Text size="sm" c="dimmed">
-                  With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-                  activities on and around the fjords of Norway
-                </Text>
-
-                <Button color="blue" fullWidth mt="md" radius="md">
-                  Book classic tour now
-                </Button>
-              </Card>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Card.Section>
-                  <Image
-                    src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                    height={160}
-                    alt="Norway"
-                  />
-                </Card.Section>
-
-                <Group justify="space-between" mt="md" mb="xs">
-                  <Text fw={500}>Norway Fjord Adventures</Text>
-                  <Badge color="pink">On Sale</Badge>
-                </Group>
-
-                <Text size="sm" c="dimmed">
-                  With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-                  activities on and around the fjords of Norway
-                </Text>
-
-                <Button color="blue" fullWidth mt="md" radius="md">
-                  Book classic tour now
-                </Button>
-              </Card>
-            </Grid.Col>
-            <Grid.Col span={6}>
-              <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Card.Section>
-                  <Image
-                    src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                    height={160}
-                    alt="Norway"
-                  />
-                </Card.Section>
-
-                <Group justify="space-between" mt="md" mb="xs">
-                  <Text fw={500}>Norway Fjord Adventures</Text>
-                  <Badge color="pink">On Sale</Badge>
-                </Group>
-
-                <Text size="sm" c="dimmed">
-                  With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-                  activities on and around the fjords of Norway
-                </Text>
-
-                <Button color="blue" fullWidth mt="md" radius="md">
-                  Book classic tour now
-                </Button>
-              </Card>
-            </Grid.Col>
+            {blogs.map(blog => <BlogCard blog={blog} />)}
             <Grid.Col span={6}>
               <Card shadow="sm" padding="lg" radius="md" withBorder >
                 <Text size="sm" c="dimmed">
@@ -104,7 +57,7 @@ export default function Dashboard() {
               </Card>
             </Grid.Col>
           </Grid>
-      </Container>)}
+      </Container>
     </>
   );
 }

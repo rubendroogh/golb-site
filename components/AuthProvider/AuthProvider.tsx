@@ -13,13 +13,13 @@ export const AuthContext = createContext(false);
 export default function AuthProvider( {children} : AuthProps ) {
     const [loggedIn, setLoggedIn] = useState(false);
   
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setLoggedIn(true);
-        } else {
-            setLoggedIn(false);
-        }
-    });
+    // onAuthStateChanged(auth, (user) => {
+    //     if (user) {
+    //         setLoggedIn(true);
+    //     } else {
+    //         setLoggedIn(false);
+    //     }
+    // });
 
     return (
         <>

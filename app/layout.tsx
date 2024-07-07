@@ -2,7 +2,6 @@ import '@mantine/core/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '../theme';
-import AuthProvider from '@/components/AuthProvider/AuthProvider';
 
 export const metadata = {
   title: 'Golb Games',
@@ -22,9 +21,7 @@ export default function RootLayout({ children }: { children: any }) {
       </head>
       <body>
         <MantineProvider defaultColorScheme="dark" theme={theme}>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
+          {children}
         </MantineProvider>
       </body>
     </html>

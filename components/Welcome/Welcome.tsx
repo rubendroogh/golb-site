@@ -1,4 +1,4 @@
-import { Title, Text, Anchor } from '@mantine/core';
+import { Text } from '@mantine/core';
 
 export function Welcome() {
   return (

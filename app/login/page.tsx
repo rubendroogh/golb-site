@@ -21,7 +21,11 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const loginInfo = await signInWithEmailAndPassword(auth, email, password);
+      loginInfo.user.getIdToken().then((token) => {
+        document.cookie = `token=${token}; path=/`;
+        window.location.href = '/dashboard';
+      });
     } catch (error) {
       console.error(error);
     }
