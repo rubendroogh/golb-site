@@ -1,6 +1,7 @@
 import { HeaderNavigation } from '@/components/HeaderNavigation/HeaderNavigation';
 import { Welcome } from '../components/Welcome/Welcome';
 import { BlogsHome } from '@/components/BlogsHome/BlogsHome';
+import { FooterSocial } from '@/components/FooterSocial/FooterSocial';
 
 export default function HomePage() {
   return (
@@ -8,6 +9,7 @@ export default function HomePage() {
         <HeaderNavigation />
         <Welcome />
         <BlogsHome />
+        <FooterSocial/>
     </>
   );
 }
