@@ -6,6 +6,7 @@ export default interface Blog {
     intro: string;
     content: string;
     imageURL: string;
+    slug: string;
     contributors: string[];
 }
 
@@ -17,12 +18,13 @@ export const blogConverterClient = {
             intro: blog.intro,
             image: blog.imageURL,
             content: blog.content,
+            slug: blog.slug,
             contributors: blog.contributors
         };
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>, options?: SnapshotOptions) => {
         const data = snapshot.data(options);
-        return { title: data.title, intro: data.intro, imageURL: data.image, content: data.content } as Blog;
+        return { title: data.title, intro: data.intro, imageURL: data.image, slug: data.slug, content: data.content } as Blog;
     }
 };
 
