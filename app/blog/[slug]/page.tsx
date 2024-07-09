@@ -11,8 +11,8 @@ import {
 } from '@mantine/core';
 import { db } from "@/firebase/adminApp";
 import { blogConverterServer } from '@/interfaces/Blog';
-import Markdown from 'react-markdown';
 import { FooterSocial } from '@/components/FooterSocial/FooterSocial';
+import { BlogText } from '@/components/BlogText/BlogText';
 
 export default async function Blog({ params }: { params: { slug: string } }) {
     const blogNotFound = (
@@ -50,6 +50,7 @@ export default async function Blog({ params }: { params: { slug: string } }) {
     const contributors = blog?.contributors.map((name, index) => (
         <span key={index}>{name}</span>
     ));
+    const blogText = blog?.content.replaceAll('\\n', '\n');
 
     return (
         <>
@@ -71,9 +72,7 @@ export default async function Blog({ params }: { params: { slug: string } }) {
                         radius="md"
                         src={blog?.imageURL}
                     />)}
-                    <Text size="md" mt="xs">
-                        {blog?.content}
-                    </Text>
+                    <BlogText text={blogText} />
                 </Container>
             <FooterSocial/>
         </>
