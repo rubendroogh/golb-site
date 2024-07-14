@@ -3,11 +3,7 @@ import {
     Anchor,
     Title,
     Container,
-    Text,
     Divider,
-    Button,
-    Paper,
-    Image,
 } from '@mantine/core';
 import { db } from "@/firebase/adminApp";
 import { blogConverterServer } from '@/interfaces/Blog';
