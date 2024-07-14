@@ -1,27 +1,31 @@
 'use client'
 
 import Blog from '@/interfaces/Blog';
-import { Input, MultiSelect, Textarea, TextInput } from '@mantine/core';
+import { Button, Input, LoadingOverlay, MultiSelect, Textarea, TextInput } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useEffect, useState } from 'react';
 import { Markdown } from 'tiptap-markdown';
+import { db } from '@/firebase/clientApp';
+import { doc, getDoc, setDoc } from "firebase/firestore"; 
 
-const content =
-  '## Test titel \nSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.\n\n Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?';
-
-export function BlogEditForm(props: {blog: Blog | undefined, slug: string}) {
-    if (props?.blog == undefined) {
+export function BlogEditForm(props: {blog: Blog | undefined, slug: string }) {
+    if (props?.blog == undefined && props.slug != 'create') {
         window.location.href = '/dashboard';
         return;
     }
 
-    const [title, setTitle] = useState(props.blog.title);
-    const [intro, setIntro] = useState(props.blog.intro);
-    const [imageURL, setImageURL] = useState(props.blog.imageURL);
-    const [contributors, setContributors] = useState(props.blog.contributors);
-    const [currentSlug, setCurrentSlug] = useState(props.slug);
+    const content = props?.blog?.content.replaceAll('\\n', '\n') ?? '';
+    const isNew = props.slug == 'create';
+
+    const [title, setTitle] = useState(props?.blog?.title ?? '');
+    const [intro, setIntro] = useState(props?.blog?.intro ?? '');
+    const [imageURL, setImageURL] = useState(props?.blog?.imageURL ?? '');
+    const [contributors, setContributors] = useState(props?.blog?.contributors ?? []);
+    const [currentSlug, setCurrentSlug] = useState(isNew ? '' : props.slug);
+    const [isSaving, setIsSaving] = useState(false);
 
     const editor = useEditor({
         extensions: [
@@ -33,11 +37,35 @@ export function BlogEditForm(props: {blog: Blog | undefined, slug: string}) {
     });
 
     useEffect(() => {
-        // setCurrentSlug();
+        if (isNew) {
+            setCurrentSlug(
+                title
+                .toLowerCase()
+                .replace(/ /g, '-')
+                .replace(/[^\w-]+/g, ''));
+        }
     }, [title]);
+
+    const updateOrSaveBlog = async () => {
+        setIsSaving(true);
+        const existingDoc = await getDoc(doc(db, 'blogs', currentSlug));
+        await setDoc(doc(db, "blogs", currentSlug), {
+            title: title,
+            intro: intro,
+            image: imageURL,
+            content: editor?.storage.markdown.getMarkdown() ?? '',
+            contributors: contributors
+        });
+
+        if (!existingDoc.exists()) {
+            window.location.href = `/dashboard/blog/${currentSlug}`
+        }
+        setIsSaving(false);
+    }
 
     return (
         <>
+            <LoadingOverlay visible={isSaving} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
             <TextInput
                 label="Title"
                 value={title}
@@ -112,6 +140,13 @@ export function BlogEditForm(props: {blog: Blog | undefined, slug: string}) {
                     <RichTextEditor.Content />
                 </RichTextEditor>
             </Input.Wrapper>
+            <Button
+                onClick={updateOrSaveBlog}
+                mt={16}
+                rightSection={<IconDeviceFloppy size={14} />}
+            >
+                Save
+            </Button>
         </>
     );
 }

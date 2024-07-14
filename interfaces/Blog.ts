@@ -6,6 +6,7 @@ export default interface Blog {
     intro: string;
     content: string;
     imageURL: string;
+    slug: string;
     contributors: string[];
 }
 
@@ -22,7 +23,14 @@ export const blogConverterClient = {
     },
     fromFirestore: (snapshot: QueryDocumentSnapshot<DocumentData, DocumentData>, options?: SnapshotOptions) => {
         const data = snapshot.data(options);
-        return { title: data.title, intro: data.intro, imageURL: data.image, content: data.content, contributors: data.contributors } as Blog;
+        return {
+            title: data.title,
+            intro: data.intro,
+            imageURL: data.image,
+            content: data.content,
+            slug: snapshot.id,
+            contributors: data.contributors
+        } as Blog;
     }
 };
 
@@ -40,6 +48,13 @@ export const blogConverterServer: admin.firestore.FirestoreDataConverter<Blog> =
         snapshot: FirebaseFirestore.QueryDocumentSnapshot
     ): Blog {
         const data = snapshot.data();
-        return { title: data.title, intro: data.intro, imageURL: data.image, content: data.content, contributors: data.contributors } as Blog;
+        return {
+            title: data.title,
+            intro: data.intro,
+            imageURL: data.image,
+            content: data.content,
+            slug: snapshot.id,
+            contributors: data.contributors
+        } as Blog;
     }
 }

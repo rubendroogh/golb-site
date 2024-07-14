@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Container,
   Group,
   Image,
@@ -15,7 +16,9 @@ export function HeaderNavigation({ logoVariant: logoVariant = "default"}) {
     <div className={classes.header}>
       <Paper shadow="md" className={classes.mainSection} bg="#2e2e2e">
         <Group justify="space-around">
-          {logo}
+          <Anchor href='/'>
+            {logo}
+          </Anchor>
         </Group>
       </Paper>
     </div>

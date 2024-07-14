@@ -20,26 +20,22 @@ export default async function Blog({ params }: { params: { slug: string } }) {
         redirect('/dashboard', RedirectType.replace);
     }
 
+    const isCreate = params.slug == 'create'
     const blogRef = db.collection("blogs").withConverter(blogConverterServer).doc(params.slug);
     const blogSnapshot = await blogRef.get();
     
-    if (!blogSnapshot.exists) {
+    if (!blogSnapshot.exists && !isCreate) {
         redirect('/dashboard', RedirectType.replace);
     }
 
     const blog = blogSnapshot.data();
 
-    const contributors = blog?.contributors.map((name, index) => (
-        <span key={index}>{name}</span>
-    ));
-    const blogText = blog?.content.replaceAll('\\n', '\n');
-
     return (
         <>
             <HeaderNavigation />
             <Container maw={1200} mx="auto" mb="32">
-                <Anchor size="sm" opacity={.9} href="/">↜ Back to home</Anchor>
-                <Title>Edit blog</Title>
+                <Anchor size="sm" opacity={.9} href="/dashboard">↜ Back to dashboard</Anchor>
+                <Title>{isCreate ? 'Create' : 'Edit'} blog</Title>
                 <Divider my="md" />
                 <BlogEditForm blog={blog} slug={params.slug} />
             </Container>

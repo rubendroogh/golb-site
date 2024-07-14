@@ -47,9 +47,7 @@ export default async function Blog({ params }: { params: { slug: string } }) {
 
     const blog = blogSnapshot.data();
 
-    const contributors = blog?.contributors.map((name, index) => (
-        <span key={index}>{name}</span>
-    ));
+    const contributors = blog?.contributors.join(', ');
     const blogText = blog?.content.replaceAll('\\n', '\n');
 
     return (
