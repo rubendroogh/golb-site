@@ -7,6 +7,8 @@ export default interface Blog {
     content: string;
     imageURL: string;
     slug: string;
+    createdTimestamp: number;
+    updatedTimestamp: number;
     contributors: string[];
 }
 
@@ -18,6 +20,8 @@ export const blogConverterClient = {
             intro: blog.intro,
             image: blog.imageURL,
             content: blog.content,
+            createdTimestamp: blog.createdTimestamp,
+            updatedTimestamp: blog.updatedTimestamp,
             contributors: blog.contributors
         };
     },
@@ -29,6 +33,8 @@ export const blogConverterClient = {
             imageURL: data.image,
             content: data.content,
             slug: snapshot.id,
+            createdTimestamp: data.createdTimestamp,
+            updatedTimestamp: data.updatedTimestamp,
             contributors: data.contributors
         } as Blog;
     }
@@ -41,6 +47,8 @@ export const blogConverterServer: admin.firestore.FirestoreDataConverter<Blog> =
             intro: blog.intro,
             image: blog.imageURL,
             content: blog.content,
+            createdTimestamp: blog.createdTimestamp,
+            updatedTimestamp: blog.updatedTimestamp,
             contributors: blog.contributors
         };
     },
@@ -54,6 +62,8 @@ export const blogConverterServer: admin.firestore.FirestoreDataConverter<Blog> =
             imageURL: data.image,
             content: data.content,
             slug: snapshot.id,
+            createdTimestamp: data.createdTimestamp,
+            updatedTimestamp: data.updatedTimestamp,
             contributors: data.contributors
         } as Blog;
     }

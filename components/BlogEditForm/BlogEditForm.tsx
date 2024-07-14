@@ -49,17 +49,26 @@ export function BlogEditForm(props: {blog: Blog | undefined, slug: string }) {
     const updateOrSaveBlog = async () => {
         setIsSaving(true);
         const existingDoc = await getDoc(doc(db, 'blogs', currentSlug));
+        let createdAt = Date.now();
+
+        if (existingDoc.exists()) {
+            createdAt = existingDoc.data().createdTimestamp ?? Date.now();
+        }
+
         await setDoc(doc(db, "blogs", currentSlug), {
             title: title,
             intro: intro,
             image: imageURL,
+            createdTimestamp: createdAt,
+            updatedTimestamp: Date.now(),
             content: editor?.storage.markdown.getMarkdown() ?? '',
             contributors: contributors
         });
 
         if (!existingDoc.exists()) {
-            window.location.href = `/dashboard/blog/${currentSlug}`
+            window.location.href = `/dashboard/blog/${currentSlug}`;
         }
+
         setIsSaving(false);
     }
 
