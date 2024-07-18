@@ -1,6 +1,5 @@
 import {
   Anchor,
-  Container,
   Group,
   Image,
   Paper,

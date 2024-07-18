@@ -1,0 +1,23 @@
+.blog-container a {
+    color: white;
+}
+
+.blog-container:hover a {
+    text-decoration: none;
+}
+
+.blog-container {
+    transition: transform .2s;
+}
+
+.blog-container h3 {
+    transition: transform .4s;
+}
+
+.blog-container:hover {
+    transform: scale(1.05);
+}
+
+.blog-container:hover h3 {
+    transform: scale(1.05);
+}
