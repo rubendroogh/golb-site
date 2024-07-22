@@ -8,7 +8,7 @@ import classes from './HeaderNavigation.module.css';
 
 export function HeaderNavigation({ logoVariant: logoVariant = "default"}) {
   const logo = logoVariant === "default" ?
-    <Image src="/GolbLogo.gif" w="auto" fit="contain" style={{ height: "10rem" }} flex={1} /> :
+    <Image src="/GolbLogo.gif" w="auto" fit="contain" style={{ height: "10rem", maxWidth: "90vw" }} flex={1} /> :
     <Image src="/GolbLogo.gif" w="auto" fit="contain" style={{ height: "5rem", marginBottom: "-1rem", marginTop: "-.5rem" }} flex={1} />;
 
   return (
