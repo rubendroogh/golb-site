@@ -68,6 +68,7 @@ export default async function Blog({ params }: { params: { slug: string } }) {
                     {blog?.imageURL != '' && (<Image
                         my="16"
                         radius="md"
+                        mah="20rem"
                         src={blog?.imageURL}
                     />)}
                     <BlogText text={blogText} />
